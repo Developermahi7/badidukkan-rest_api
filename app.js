@@ -3,13 +3,13 @@ import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-
+import userRoutes from "./api/routes/user"
 const app = express();
 
 const connection_uri = process.env.MONGO_DB_URI;
 
 mongoose
-  .connect(connection_uri, {useNewUrlParser:true})
+  .connect(connection_uri, { useNewUrlParser: true })
   .then(result => {
     console.log("Connected to mongodb successfully. ");
   })
@@ -22,6 +22,8 @@ mongoose.Promise = global.Promise;
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use("/user", userRoutes)
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -51,5 +53,7 @@ app.use((error, req, res, next) => {
     }
   });
 });
+
+
 
 export default app;
